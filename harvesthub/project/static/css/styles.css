@@ -1,13 +1,12 @@
 {% load static %}
 
-header.jumbotron {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);*/
-    height: 400px;*/
-     background-image: url('../images/header.jpg');*/
-  background-size: cover;*/
-    background-position: center;*/
-    color: white;*/
-    position: relative;*/
+    header.jumbotron {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        height: 400px;
+        background-image: url('/static/images/header.jpg');        background-size: cover;
+        background-position: center;
+        color: white;
+        position: relative;
  }
     header.jumbotron::before {
         content: '';
@@ -110,6 +109,12 @@ nav {
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.card-img-top {
+    max-width: 100%;  /* Adjust the width to the card's container */
+    max-height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image fills the space while preserving the aspect ratio */
 }
 
 
