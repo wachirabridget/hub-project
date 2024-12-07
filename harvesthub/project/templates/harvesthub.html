@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Harvest Hub </title>
+
+    <!-- Bootstrap CSS (Bootstrap begins here) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+<!--    <link rel="stylesheet" href="../static/css/styles.css">-->
+    {% load static %}
+
+    <link href="{% static 'css/styless.css'%}"/>
+</head>
+<body>
+    <!-- Navigation Section -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+        <div class="container">
+            <a class="navbar-brand" href="#">Harvest Hub</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#solutions">Solutions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#search">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq"> Questions Asked</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<main role="main"> 
+<!-- Header Section -->
+    <header class="jumbotron text-center" role="banner" >
+        <img src="{% static 'images/header.jpg'%}" alt="">
+        <div class="container">
+            <h1 class="display-4">Hello, welcome to harvest hub</h1>
+            <p class="lead">Happy farmer, happy life.</p>
+            <a href="#solutions" class="btn btn-primary btn-lg">View our Work</a>
+        </div>
+    </header>
+
+<!-- About Section  start-->
+    <section id="about" class="py-5">
+            <div class="row">
+                <div class="col-lg-5">
+                    <h2>About us</h2>
+                    <p>we help farmers learn the prices of crops at their nearest market. </p>
+                </div>
+                <div class="col-lg-7">
+                    <img src="../static/images/about.jpg" alt=" Picture" width="100%" class="About-image">
+                </div>
+            </div>
+    </section>
+<!--about section end-->
+
+<!-- Solution Section -->
+    <section id="solutions" class="bg-light py-5">
+            <h2 class="text-center">solutions</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="../static/images/solution1.jpg" class="card-img-top" alt=" solution" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">Price awareness</h5>
+                            <p class="card-text">we offer updated prices about crops within the country</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="../static/images/solution2.jpg" class="card-img-top" alt="solution" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">Know your market</h5>
+                            <p class="card-text">Through us you will be able to identify open gap within the market that will best fit you </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="../static/images/solution3.jpg" class="card-img-top" alt="solution" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">Control your supply </h5>
+                            <p class="card-text">By knowing your market you will able to tell where the demand is high and also where the supply is low</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+<!-- Solutions section end-->
+
+<!-- Search Section Start -->
+<section id="search" class="py-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Know Prices</h1>
+            <h2>Harvest Hub - Find Crop Prices</h2>
+            <form id="search-form" action="price_api.php" method="get">
+                <label for="crop">Crop:</label>
+                <input type="text" id="crop" name="crop" placeholder="Enter crop name" required><br><br>
+                
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location" required><br><br>
+                
+                <button type="submit">Search</button>
+            </form>
+            <h3>Price Info:</h3>
+            <p id="result"></p>
+        </div>
+        <div class="col-lg-6">
+            <img src="../static/images/know.jpg" alt="Picture" width="100%">
+        </div>
+    </div>
+</section>
+<!-- Search Section End -->
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Get form values
+        const form = event.target;
+        const crop = form.crop.value;
+        const location = form.location.value;
+
+        // Fetch data from API
+        try {
+            const response = await fetch(`${form.action}?crop=${encodeURIComponent(crop)}&location=${encodeURIComponent(location)}`);
+            const data = await response.json();
+
+            // Display result
+            const resultDiv = document.getElementById('result');
+            if (data.price) {
+                resultDiv.textContent = `Price for ${crop} in ${location}: ${data.price}`;
+            } else {
+                resultDiv.textContent = data.error || 'An unexpected error occurred.';
+            }
+        } catch (error) {
+            document.getElementById('result').textContent = 'Failed to fetch data. Please try again later.';
+        }
+    });
+</script>
+
+
+<!--    testimonial section -->
+
+    <section id="testimonials" class="py-5 bg-light">
+        <h2 class="text-center">Testimonials</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"Harvest Hub has completely changed the way I plan my crops. I always know the best prices now!"</p>
+                    <footer class="blockquote-footer"> <span class="highlight-name">John Doe,Farmer</span></footer>
+
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"Knowing the demand in different markets has helped me maximize profits."</p>
+                    <footer class="blockquote-footer"> <span class="highlight-name">Jane Smith,Farmer</span></footer>
+
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"The insights provided are invaluable. I've expanded my business significantly!"</p>
+                    <footer class="blockquote-footer"><span class="highlight-name">Michael Lee, Agribusiness Owner</span></footer>
+                </blockquote>
+            </div>
+        </div>
+</section>
+<!--    testimonial section end-->
+
+<!--    faq section -->
+
+    <section id="faq" class="py-5 bg-light">
+        <h2 class="text-center">Frequently Asked Questions</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="card">
+                <div class="card-header" id="faq1">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true">
+                            How do I get crop price updates?
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapse1" class="collapse show" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        Enter the crop name and location in the search section to get the latest prices.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="faq2">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2">
+                            Is the service free?
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapse2" class="collapse" data-parent="#faqAccordion">
+                    <div class="card-body">
+                        Yes, Harvest Hub is free to use for all farmers.
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<!--    faq section end-->
+
+
+
+ <!-- Contact Section -->
+                    <section id="contact" class="py-5">
+                            <h2 class="text-center">Contact  us</h2>
+                            <div class="row">
+                                <div class="col-lg-8 mx-auto">
+                                    <form id="Contactform"  method="post">
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message">Message</label>
+                                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                    </form>
+                            
+                                    <script>
+										function showMessage(type, message) {
+											const alertDiv = document.createElement('div');
+											alertDiv.className = `alert alert-${type}`;
+											alertDiv.innerText = message;
+											document.body.prepend(alertDiv); 
+											setTimeout(() => {
+												alertDiv.remove();
+											}, 3000);
+										}
+                                        document.querySelector('form').addEventListener('submit', function(e) {
+                                            e.preventDefault();
+                                            const name = document.getElementById('name').value;
+                                            const email = document.getElementById('email').value;
+                                            const message = document.getElementById('message').value;
+
+                                            if (name.trim() === '' || message.trim().length < 10 || !/\S+@\S+\.\S+/.test(email)) {
+                                                showMessage('danger', 'Please fill in all fields correctly.');
+                                                return;
+                                            }
+
+                                            const data = { name, email, message };
+                                            fetch('http://localhost/harvesthub/contact_api.php', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify(data)
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    showMessage('success', 'Message sent successfully!');
+                                                    document.querySelector('form').reset();
+                                                } else {
+                                                    showMessage('danger', 'Error: ' + data.message);
+                                                }
+                                            })
+                                            .catch(error => {
+                                                showMessage('danger', 'An error occurred while sending the message.');
+                                            });
+                                        });
+                                    </script>
+                                </div> 
+                            </div>
+                    </section>
+<!--    contact section end-->
+
+</main> 
+<!-- Footer Section -->
+    <footer class="bg-dark text-white text-center py-4" role="contentinfo">
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> Harvest Hub</p>
+				<script>
+					document.getElementById('currentYear').textContent = new Date().getFullYear();
+				</script>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
