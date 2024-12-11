@@ -111,6 +111,28 @@
                 
                 <button type="submit">Search</button>
             </form>
+            <script>
+                document.getElementById('search-form').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                
+                    const crop = document.getElementById('crop').value;
+                    const location = document.getElementById('location').value;
+                    const resultDiv = document.getElementById('result');
+                
+                    try {
+                        const response = await fetch(`/api/crop-price/?crop=${encodeURIComponent(crop)}&location=${encodeURIComponent(location)}`);
+                        const data = await response.json();
+                
+                        if (data.price) {
+                            resultDiv.textContent = `Price for ${crop} in ${location}: ${data.price} USD`;
+                        } else {
+                            resultDiv.textContent = data.error || 'An unexpected error occurred.';
+                        }
+                    } catch (error) {
+                        resultDiv.textContent = 'Error fetching data. Please try again.';
+                    }
+                });
+                </script>
             <h3>Price Info:</h3>
             <p id="result"></p>
         </div>
@@ -120,33 +142,6 @@
     </div>
 </section>
 <!-- Search Section End -->
-
-<script>
-    document.getElementById('search-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        // Get form values
-        const form = event.target;
-        const crop = form.crop.value;
-        const location = form.location.value;
-
-        // Fetch data from API
-        try {
-            const response = await fetch(`${form.action}?crop=${encodeURIComponent(crop)}&location=${encodeURIComponent(location)}`);
-            const data = await response.json();
-
-            // Display result
-            const resultDiv = document.getElementById('result');
-            if (data.price) {
-                resultDiv.textContent = `Price for ${crop} in ${location}: ${data.price}`;
-            } else {
-                resultDiv.textContent = data.error || 'An unexpected error occurred.';
-            }
-        } catch (error) {
-            document.getElementById('result').textContent = 'Failed to fetch data. Please try again later.';
-        }
-    });
-</script>
 
 
 <!--    testimonial section -->
