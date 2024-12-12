@@ -120,11 +120,11 @@
                     const resultDiv = document.getElementById('result');
                 
                     try {
-                        const response = await fetch(`/api/crop-price/?crop=${encodeURIComponent(crop)}&location=${encodeURIComponent(location)}`);
+                        const response = await fetch(/api/crop-price/?crop=${encodeURIComponent(crop)}&location=${encodeURIComponent(location)});
                         const data = await response.json();
                 
                         if (data.price) {
-                            resultDiv.textContent = `Price for ${crop} in ${location}: ${data.price} USD`;
+                            resultDiv.textContent = Price for ${crop} in ${location}: ${data.price} USD;
                         } else {
                             resultDiv.textContent = data.error || 'An unexpected error occurred.';
                         }
@@ -216,65 +216,30 @@
  <!-- Contact Section -->
                     <section id="contact" class="py-5">
                             <h2 class="text-center">Contact  us</h2>
-                            <div class="row">
+                            <div class="col h-auto">
                                 <div class="col-lg-8 mx-auto">
-                                    <form id="Contactform"  method="post">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {%for field in form %}
                                         <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                            {{ field.label_tag }}
+                                            {{ field }}
                                         </div>
                                         <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                            {{ form.email.label_tag }}
+                                            {{ form.email }}
                                         </div>
                                         <div class="form-group">
-                                            <label for="message">Message</label>
-                                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                                            {{ form.subject.label_tag }}
+                                            {{ form.subject }}
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Send Message</button>
+                                        <div class="form-group">
+                                            {{ form.message.label_tag }}
+                                            {{ form.message }}
+                                        </div>
+                                    {%endfor%}
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </form>
-                            
-                                    <script>
-										function showMessage(type, message) {
-											const alertDiv = document.createElement('div');
-											alertDiv.className = `alert alert-${type}`;
-											alertDiv.innerText = message;
-											document.body.prepend(alertDiv); 
-											setTimeout(() => {
-												alertDiv.remove();
-											}, 3000);
-										}
-                                        document.querySelector('form').addEventListener('submit', function(e) {
-                                            e.preventDefault();
-                                            const name = document.getElementById('name').value;
-                                            const email = document.getElementById('email').value;
-                                            const message = document.getElementById('message').value;
-
-                                            if (name.trim() === '' || message.trim().length < 10 || !/\S+@\S+\.\S+/.test(email)) {
-                                                showMessage('danger', 'Please fill in all fields correctly.');
-                                                return;
-                                            }
-
-                                            const data = { name, email, message };
-                                            fetch('http://localhost/harvesthub/contact_api.php', {
-                                                method: 'POST',
-                                                headers: { 'Content-Type': 'application/json' },
-                                                body: JSON.stringify(data)
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    showMessage('success', 'Message sent successfully!');
-                                                    document.querySelector('form').reset();
-                                                } else {
-                                                    showMessage('danger', 'Error: ' + data.message);
-                                                }
-                                            })
-                                            .catch(error => {
-                                                showMessage('danger', 'An error occurred while sending the message.');
-                                            });
-                                        });
-                                    </script>
                                 </div> 
                             </div>
                     </section>

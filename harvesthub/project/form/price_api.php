@@ -1,44 +1,25 @@
 <?php
-header('Content-Type: application/json');
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "harvesthub"; 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET");
+header("Content-Type: application/json");
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$crop = isset($_GET['crop']) ? $_GET['crop'] : '';
+$location = isset($_GET['location']) ? $_GET['location'] : '';
 
-if ($conn->connect_error) {
-    die(json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]));
-}
-
-
-$crop = $_GET['crop'] ?? null;
-$location = $_GET['location'] ?? null;
-
-if (!$crop || !$location) {
-    echo json_encode(['error' => 'Missing crop or location parameter.']);
+if (empty($crop) || empty($location)) {
+    echo json_encode(["error" => "Crop and location must be provided."]);
     exit;
 }
 
-$apiUrl = "https://api.example.com/prices?crop=" . urlencode($crop) . "&location=" . urlencode($location);
+$api_url = "http://localhost:8000/api/crop-price/?crop=" . urlencode($crop) . "&location=" . urlencode($location);
 
-try {
-    
-    $response = file_get_contents($apiUrl);
 
-    if ($response === false) {
-        throw new Exception('Failed to connect to the API.');
-    }
+$response = file_get_contents($api_url);
 
-    $data = json_decode($response, true);
-
-    if (isset($data['price'])) {
-        echo json_encode(['price' => $data['price']]);
-    } else {
-        echo json_encode(['error' => 'Price information not available for the given crop and location.']);
-    }
-} catch (Exception $e) {
-    
-    echo json_encode(['error' => $e->getMessage()]);
+if ($response === FALSE) {
+    echo json_encode(["error" => "Unable to fetch price from the backend."]);
+    exit;
 }
+
+echo $response;
 ?>
